@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Message ChatGPT</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="content">
+        <div id="user-input-display"></div>
+        <form id="name-form" onsubmit="event.preventDefault(); handleFormSubmit();">
+            <div class="input-container">
+                <input type="text" id="name-input" placeholder="Message ChatGPT..." autocomplete="off">
+                <label for="image-input" class="image-upload-label">🐋</label>
+                <input type="file" id="image-input" accept="image/*" onchange="handleImageUpload(event)" class="hidden">
+            </div>
+            <p>Made Using Google Gemini API</p>
+        </form>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
