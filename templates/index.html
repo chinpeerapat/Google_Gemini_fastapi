@@ -3,19 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Message ChatGPT</title>
+    <title>Gemini</title>
     <link rel="stylesheet" href="../static/styles.css">
+    <!-- <script src="https://cdn.jsdelivr.net/npm/showdown@1.9.1/dist/showdown.min.js"></script> -->
 </head>
 <body>
     <div id="content">
-        <div id="user-input-display"></div>
+        <div id="user-input-display">{{ final | safe }}</div>
         <form id="name-form" onsubmit="event.preventDefault(); handleFormSubmit();">
             <div class="input-container">
-                <input type="text" id="name-input" placeholder="Message ChatGPT..." autocomplete="off">
-                <label for="image-input" class="image-upload-label">🐋</label>
-                <input type="file" id="image-input" accept="image/*" onchange="handleImageUpload(event)" class="hidden">
+                <input type="text" id="name-input" placeholder="Message Gemini..." autocomplete="off">
             </div>
-            <p>Made Using Google Gemini API</p>
+            <p>Google Gemini API</p>
         </form>
     </div>
     <script src="../static/script.js"></script>

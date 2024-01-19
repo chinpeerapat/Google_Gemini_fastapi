@@ -27,7 +27,7 @@ body {
 
 #name-input {
     flex: 1;
-    margin-top: 120%;
+    margin-top: 119%;
     padding: 18px;
     margin-left: 10px;
     background-color: #343541;
@@ -35,28 +35,30 @@ body {
     border-radius: 20px;
     width: 700px;
     font-size: 16px;
-    color: white;
+    color: #bdb8b8;
     outline: none;
+    font-style: italic;
 }
 
 #name-input::placeholder {
     color: #6d7379;
 }
 
-.image-upload-label {
-    position: relative;
-    margin-left: -40px;
-    font-size: 1.2em;
-    cursor: pointer;
-    z-index: 1;
-    margin-top: 120%;
-}
-
 p {
+    margin-top: 8px;
     font-size: 15px;
     line-height: 1.6;
-    margin-top: 2%;
     color: #bdb8b8;
+}
+
+h7 {
+    color: #bdb8b8;
+}
+
+i {
+    font-size: 5px;
+    color: #bdb8b8;
+    white-space: pre-line;
 }
 
 .hidden {
