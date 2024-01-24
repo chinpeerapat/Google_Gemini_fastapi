@@ -33,6 +33,7 @@ function handleFormSubmit() {
                 console.error(error);
             });
     }
+    document.getElementById('nameInput').value.trim() = "";
 }
 
 function fetchData(url) {
