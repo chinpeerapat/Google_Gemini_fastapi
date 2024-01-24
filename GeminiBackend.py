@@ -24,7 +24,7 @@ app.add_middleware(
 )
 
 def get_generative_model(model_name):
-    genai.configure(api_key="AIzaSyA8y0yF-ELyAB3pWxgQfWiKiDeXFCGPHOE")
+    genai.configure(api_key="GEMINI_API_KEY")
     return genai.GenerativeModel(model_name)
 
 generative_text_model = get_generative_model('gemini-pro')
