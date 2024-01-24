@@ -1,10 +1,13 @@
-from fastapi import FastAPI, Request, Depends
+import markdown
+from fastapi import HTTPException
+from fastapi import FastAPI, File, UploadFile, Depends, Request, Query
+from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
+from pathlib import Path
 import google.generativeai as genai
-import markdown
+import markdown2
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
@@ -13,26 +16,21 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 origins = ["http://127.0.0.1:8000"]
 
 app.add_middleware(
-    CORSMiddleware, 
-    allow_origins=origins, 
-    allow_credentials=True, 
-    allow_methods=["*"], 
-    allow_headers=["*"]
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
-def GenerativeModel():
-    genai.configure(api_key="AIzaSyDxs0jRMN67R0FGYb36I_cF0HOvbdJTn0Y")
-    return genai.GenerativeModel('gemini-pro')
+def get_generative_model(model_name):
+    genai.configure(api_key="AIzaSyA8y0yF-ELyAB3pWxgQfWiKiDeXFCGPHOE")
+    return genai.GenerativeModel(model_name)
 
-def convert_to_markdown(paragraph):
-    return markdown.markdown(paragraph)
+generative_text_model = get_generative_model('gemini-pro')
+generative_image_model = get_generative_model('gemini-pro-vision')
 
-def removeComments(text):
-    lines = text.split('\n')
-    filtered_lines = [line.split("#")[0] if "#" in line else line for line in lines]
-    result_text = '\n'.join(filtered_lines)
-    result_text = result_text.replace("```","").replace("python","")
-    return result_text
+current_image_path = None
 
 @app.get("/", response_class=HTMLResponse)
 async def root(request: Request):
@@ -42,12 +40,63 @@ async def root(request: Request):
 async def favicon():
     pass
 
+@app.post("/upload")
+async def upload(file: UploadFile = File(...)):
+    global current_image_path
+    img_path = Path(__file__).resolve().parent / "uploads" / file.filename
+    img_path.parent.mkdir(parents=True, exist_ok=True)
+    with img_path.open("wb") as buffer:
+        buffer.write(file.file.read())
+    current_image_path = img_path
+    print('uploaded')
+
+def to_html(markdown_format):
+    return (
+        markdown2.markdown(markdown_format)
+        .replace("\\", "")
+        .replace("<h1>", "<h7>")
+        .replace("</h1>", "</h7>")
+        .replace("\\\\", "")
+        .replace("```", "")
+        .replace("python", "")
+        .replace("\n","<br>")
+        .replace('"',"")
+        .replace("#","<b>")
+    )
+
+def removeEmpty(paragraph):
+    lines = paragraph.split('\n')
+    non_empty_lines = [line for line in lines if line.strip() != '']
+    cleaned_paragraph = '\n'.join(non_empty_lines)
+    return cleaned_paragraph
+
 @app.get("/gemini")
-async def query(query: str, model: GenerativeModel = Depends(GenerativeModel)):
+async def query(query: str, model_type: str = Query(default='text')):
     if not query:
         return ''
+    models = {'text': generative_text_model, 'image': generative_image_model}
+    model = models.get(model_type)
+
+    if not model:
+        raise HTTPException(status_code=400, detail="Invalid model type")
+
     response = model.generate_content(query)
-    text = response.text.replace('•', '  *').replace("*", "<i>").replace("python", "")
-    html_code = convert_to_markdown(removeComments(text))
-    python_code = html_code.replace("```", "").replace("<h1>", "<h7>").replace("</h1>", "</h7>")
-    return python_code
+    return removeEmpty(to_html(response.text))
+
+
+@app.get("/gemini/img")
+async def queryimg(query: str, model_type: str = Query(default='image')):
+    global current_image_path
+    img_data = current_image_path.read_bytes()
+    img = [{"mime_type": "image/jpeg", "data": img_data}]
+
+    model = generative_text_model if model_type == 'text' else generative_image_model
+
+    if model_type not in {'text', 'image'}:
+        raise HTTPException(status_code=400, detail="Invalid model type")
+
+    response = model.generate_content([query, img[0]], stream=True)
+    response.resolve()
+    current_image_path = None
+
+    return removeEmpty(to_html(response.text))

@@ -1,43 +1,69 @@
-function handleFormSubmit() {
-    const userInput = document.getElementById('name-input').value;
-    const userInputDisplay = document.getElementById('user-input-display');
+document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('nameInput').addEventListener('keydown', checkEnter);
+    document.getElementById('imageInput').addEventListener('change', handleFormSubmit);
+});
 
-    fetch(`http://localhost:8000/gemini?query=${encodeURIComponent(userInput)}`)
+function checkEnter(event) {
+    if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault();
+        handleFormSubmit();
+    }
+}
+
+function handleFormSubmit() {
+    const nameInput = document.getElementById('nameInput').value.trim();
+    const imageInput = document.getElementById('imageInput');
+
+    if (!imageInput.files[0]) {
+        fetchData(`/gemini?query=${encodeURIComponent(nameInput)}`)
+            .then(data => handleResponse(data));
+    } else {
+        const formData = new FormData();
+        formData.append('file', imageInput.files[0]);
+
+        fetchUpload(`/upload`, formData)
+            .then(response => {
+                if (response.ok && nameInput) {
+                    // const temp = "Explain this image in paragraph "
+                    return fetchData(`/gemini/img?query=${encodeURIComponent(nameInput)}`)
+                    .then(data => handleResponse(data));
+                }
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    }
+}
+
+function fetchData(url) {
+    return fetch(url, { method: 'GET' })
         .then(response => {
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
             return response.text();
-        })
-        .then(data => {
-            const messageElement = document.createElement('div');
-            messageElement.classList.add('message');
-            
-            // const converter = new showdown.Converter();
-            // const htmlContent = converter.makeHtml(data);
-
-            messageElement.innerHTML = data;
-
-            userInputDisplay.appendChild(messageElement);
-        })
-        .catch(error => {
-            console.error(error);
         });
-
-    document.getElementById('name-input').value = '';
-    userInputDisplay.scrollTop = userInputDisplay.scrollHeight;
 }
 
-function handleKeyPress(event) {
-    if (event.key === 'Enter') {
-        event.preventDefault();
-        
-        const userInput = document.getElementById('name-input').value;
+function fetchUpload(url, formData) {
+    return fetch(url, { method: 'POST', body: formData })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response;
+        });
+}
 
-        if (userInput.trim().length > 0) {
-            handleFormSubmit();
-        } else {
-            console.log("Input is empty. Not doing the work.");
-        }
-    }
+function handleResponse(data) {
+    const userInputDisplay = document.getElementById('userInputDisplay');
+    const messageElement = document.createElement('div');
+    messageElement.classList.add('message');
+    messageElement.innerHTML = data;
+    userInputDisplay.appendChild(messageElement);
+
+    document.getElementById('nameInput').value = '';
+    userInputDisplay.scrollTop = userInputDisplay.scrollHeight;
+
+    document.getElementById('imageInput').value = null;
 }

@@ -25,7 +25,13 @@ body {
     align-items: center;
 }
 
-#name-input {
+.image-upload-label {
+    position: absolute;
+    margin-top: 118.5%;
+    margin-left: 95%;
+}
+
+#nameInput {
     flex: 1;
     margin-top: 119%;
     padding: 18px;
@@ -40,7 +46,7 @@ body {
     font-style: italic;
 }
 
-#name-input::placeholder {
+#nameInput::placeholder {
     color: #6d7379;
 }
 
@@ -65,12 +71,12 @@ i {
     display: none;
 }
 
-#name-form {
+#uploadForm {
     text-align: center;
     color: aliceblue;
 }
 
-#user-input-display {
+#userInputDisplay {
     max-height: 790px;
     max-width: 580px;
     overflow-y: auto;
@@ -83,10 +89,10 @@ i {
     scrollbar-color: transparent transparent;
 }
 
-#user-input-display::-webkit-scrollbar {
+#userInputDisplay::-webkit-scrollbar {
     width: 0.5em;
 }
 
-#user-input-display::-webkit-scrollbar-thumb {
+#userInputDisplay::-webkit-scrollbar-thumb {
     background-color: transparent;
 }
