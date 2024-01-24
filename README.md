@@ -1,21 +1,18 @@
-## Google_Gemini: A FastAPI Interface for Google's Gemini Generative AI Models
+## Google's Gemini API Integration
 
-FastAPI interface to interact with Google's Gemini generative AI models through text generation and text-to-image generation functionalities. 
+FastAPI interface to interact with Google's Gemini generative AI models. 
 
 ### Key Features:
 
-* **Text Generation:** Generate creative text formats like poems, code, scripts, musical pieces, emails, letters, etc. based on your input query.
-* **Text-to-Image Generation:** Generate creative images inspired by your text prompt and a provided reference image. 
+* **Text Generation:** Generate creative text formats. based on your input query.
+* **Image-To-Text Generation:** Generate creative images explaination inspired by your image prompt. 
 * **Fast and Easy:** Designed for effortless exploration and integration with other projects.
 * **Clean and Documented Code:** Well-organized code with detailed comments for clear understanding.
 
 ### Requirements:
 
 * Python 3.7+
-* `fastapi`
-* `google-generativeai`
-* `PIL`
-* `requests`
+* `requirements.txt`
 
 ### Getting Started:
 
@@ -37,12 +34,12 @@ https://ai.google.dev/models/gemini
     * `query`: Text prompt for the model to generate (required).
 * Example: `http://localhost:8000/gemini?query=Write a poem about a starry night sky`
 
-#### Text-to-Image Generation:
+#### Image-To-Text Generation:
 
 * Endpoint: `/gemini/img`
 * Method: GET
 * Parameters:
-    * `query`: Text prompt for the model to generate (required).
+    * `query`: Image prompt for the model to generate Text(required).
     * `image_url`: URL of the reference image (required).
 * Example: `http://localhost:8000/gemini/img?query=Create a watercolor painting of a mountain forest&image_url=https://example.com/mountain-forest.jpg`
 
