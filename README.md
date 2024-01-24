@@ -41,7 +41,7 @@ https://ai.google.dev/models/gemini
 * Parameters:
     * `query`: Image prompt for the model to generate Text(required).
     * `image_url`: URL of the reference image (required).
-* Example: `http://localhost:8000/gemini/img?query=Create a watercolor painting of a mountain forest&image_url=https://example.com/mountain-forest.jpg`
+* Example: `http://localhost:8000/gemini/img?query=Explain This Image&image_url=https://example.com/mountain-forest.jpg`
 
 ### Contributing:
 
