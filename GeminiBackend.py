@@ -28,7 +28,6 @@ def get_generative_model(model_name):
     return genai.GenerativeModel(model_name)
 
 generative_text_model = get_generative_model('gemini-pro')
-generative_image_model = get_generative_model('gemini-pro-vision')
 
 current_image_path = None
 
@@ -39,16 +38,6 @@ async def root(request: Request):
 @app.get("/favicon.ico")
 async def favicon():
     pass
-
-@app.post("/upload")
-async def upload(file: UploadFile = File(...)):
-    global current_image_path
-    img_path = Path(__file__).resolve().parent / "uploads" / file.filename
-    img_path.parent.mkdir(parents=True, exist_ok=True)
-    with img_path.open("wb") as buffer:
-        buffer.write(file.file.read())
-    current_image_path = img_path
-    print('uploaded')
 
 def to_html(markdown_format):
     return (
@@ -83,20 +72,3 @@ async def query(query: str, model_type: str = Query(default='text')):
     response = model.generate_content(query)
     return removeEmpty(to_html(response.text))
 
-
-@app.get("/gemini/img")
-async def queryimg(query: str, model_type: str = Query(default='image')):
-    global current_image_path
-    img_data = current_image_path.read_bytes()
-    img = [{"mime_type": "image/jpeg", "data": img_data}]
-
-    model = generative_text_model if model_type == 'text' else generative_image_model
-
-    if model_type not in {'text', 'image'}:
-        raise HTTPException(status_code=400, detail="Invalid model type")
-
-    response = model.generate_content([query, img[0]], stream=True)
-    response.resolve()
-    current_image_path = None
-
-    return removeEmpty(to_html(response.text))
