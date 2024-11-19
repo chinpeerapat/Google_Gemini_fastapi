@@ -1,26 +1,10 @@
-## Google's Gemini API Integration
+### Project Overview
 
-FastAPI interface to interact with Google's Gemini generative AI models. 
+The **Generative AI Service** is a web application built using FastAPI that leverages advanced generative AI models to create content based on user inputs. This service offers two main capabilities: text generation and image-based content generation. By utilizing Google’s powerful generative models, it allows users to input prompts for both text and image generation tasks.
 
-### Key Features:
+The service is designed to handle user interactions efficiently and securely, with features like image uploading, text-based prompts, and combining both elements to generate creative content. Additionally, the application supports converting markdown content into rich HTML, providing an enhanced presentation for the generated responses.
 
-* **Text Generation:** Generate creative text formats. based on your input query.
-* **Image-To-Text Generation:** Generate creative images explaination inspired by your image prompt. 
-* **Fast and Easy:** Designed for effortless exploration and integration with other projects.
-* **Clean and Documented Code:** Well-organized code with detailed comments for clear understanding.
-
-### Requirements:
-
-* Python 3.7+
-* `requirements.txt`
-
-### Getting Started:
-
-1. Clone this repository.
-2. Install the required dependencies: `pip install -r requirements.txt`.
-3. Set your Google Cloud Platform API key as an environment variable named `GEMINI_API_KEY`.
-4. Run the server: `uvicorn main:app --host 0.0.0.0 --port 8000`.
-5. Open http://localhost:8000 in your browser.
+This service is ideal for use cases that require AI-driven content creation, such as generating descriptive text from images, creating creative writing, and producing AI-assisted visual outputs. Whether used in an internal tool or integrated into larger systems, this service provides a flexible and easy-to-use interface for generating AI-driven content.
 
 ### API Documentation:
 ```
@@ -51,9 +35,6 @@ We welcome contributions! Feel free to fork this repository, make improvements, 
 
 This project is licensed under the MIT License. See the LICENSE file for details.
 
-We hope you find Google_Gemini useful and inspiring! 
-
 ### Note:
 
 * Use Google Cloud Platform API key.
-
