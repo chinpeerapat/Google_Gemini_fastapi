@@ -2,3 +2,5 @@
 __pycache__/
 venv/
 uploads/
+.idx/dev.nix
+.env
