@@ -7,7 +7,8 @@ from app.api.health import health_router
 app = FastAPI()
 
 # CORS Configuration
-origins = ["http://127.0.0.1:8000"]
+origins_env = os.getenv("ALLOWED_ORIGINS", "http://127.0.0.1:8000")
+origins = [origin.strip() for origin in origins_env.split(",")]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
